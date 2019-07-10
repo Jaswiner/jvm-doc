@@ -11,6 +11,10 @@
   </url>
   
   <url>
+    <loc>http://jaswine.com/docs/jvm/docs/tools/jconsole/</loc>
+  </url>
+  
+  <url>
     <loc>http://jaswine.com/docs/jvm/categories/</loc>
     <priority>0</priority>
   </url>

@@ -29,5 +29,17 @@ happen-before原则  单线程happen-before原则：在同一个线程中，书�
       <description> Java虚拟机内存模型  参考:  JVM运行时数据区域 - Java SE8规范   </description>
     </item>
     
+    <item>
+      <title></title>
+      <link>http://jaswine.com/docs/jvm/docs/tools/jconsole/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://jaswine.com/docs/jvm/docs/tools/jconsole/</guid>
+      <description> 使用JConsole查看JVM进程 Jconsole可以实时的查看JVM进程的内存，线程，类加载的情况，在调优和排错的情况下非常的好用。
+1.连接 连接到JVM进程中，分为本地进程和远程连接。远程我们可以连接服务器上跑的程序。
+ 本地连接   远程连接  远程连接需要开启连接的端口，因为JConsole是通过jmx同JVM进程交互的，所以要开启，开启方法如下：
+// 主机名(远程电脑的ip) -Djava.rmi.server.hostname=192.168.44.120 //监控的端口号 -Dcom.sun.management.jmxremote.port=1099 //关闭认证 -Dcom.sun.management.jmxremote.authenticate=false // 关闭SSL -Dcom.sun.management.jmxremote.ssl=false  2.查看 </description>
+    </item>
+    
   </channel>
 </rss>
