@@ -12,7 +12,7 @@
 <title>
   
     
-    Jconsole
+    F Object
   
  | JVM Doc</title>
 
@@ -50,7 +50,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   <style>
-  nav ul a[href$="\2f docs\2fjvm\2f docs\2ftools\2fjconsole\2f "] {
+  nav ul a[href$="\2f docs\2fjvm\2f docs\2f class\2f f_object\2f "] {
       color: #004ed0;
   }
   </style>
@@ -120,7 +120,7 @@ https://github.com/alex-shpak/hugo-book
   <strong>
   
     
-    Jconsole
+    F Object
   
 </strong>
 </header>
@@ -128,39 +128,48 @@ https://github.com/alex-shpak/hugo-book
       
 <article class="markdown">
 
-<h1 id="使用jconsole查看jvm进程">使用JConsole查看JVM进程</h1>
+<h1 id="对象及其声明周期">对象及其声明周期</h1>
 
-<p>Jconsole可以实时的查看JVM进程的内存，线程，类加载的情况，在调优和排错的情况下非常的好用。</p>
+<p>对象是类的一个具体实例。</p>
 
-<h2 id="1-连接">1.连接</h2>
+<h2 id="对象的数据结构">对象的数据结构</h2>
 
-<p>连接到JVM进程中，分为本地进程和远程连接。远程我们可以连接服务器上跑的程序。</p>
-
-<ul>
-<li><strong>本地连接</strong></li>
-</ul>
-
-<p><img src="https://cdn.jaswine.com/Web/Tech-Doc/jvm/jconsole_login.png" width="500px"></p>
+<p><code>Java</code>对象存放在堆内存上，对象有固定的数据格式，分为3个部分:</p>
 
 <ul>
-<li><strong>远程连接</strong></li>
+<li>对象头(Header)</li>
+<li>实例数据(Instance Data)</li>
+<li>对齐填充(Padding)</li>
 </ul>
 
-<p>远程连接需要开启连接的端口，因为JConsole是通过jmx同JVM进程交互的，所以要开启，开启方法如下：</p>
+<p><strong><span style="color:red">对象头</span></strong>存放对象的以下信息(也称为<code>Mark Word</code>):</p>
 
-<pre><code>// 主机名(远程电脑的ip)
--Djava.rmi.server.hostname=192.168.44.120
-//监控的端口号
--Dcom.sun.management.jmxremote.port=1099   
-//关闭认证
--Dcom.sun.management.jmxremote.authenticate=false   
-// 关闭SSL
--Dcom.sun.management.jmxremote.ssl=false
-</code></pre>
+<ul>
+<li>HashCode</li>
+<li>GC分代年龄</li>
+<li>锁状态标志</li>
+<li>线程持有的的锁</li>
+<li>偏向线程ID</li>
+<li>偏向时间戳</li>
+<li></li>
+</ul>
 
-<h1 id="2-查看">2.查看</h1>
+<p><strong><span style="color:red">实例数据</span></strong>是对象真正存放的有效信息，以下信息:</p>
 
-<p><img src="https://cdn.jaswine.com/Web/Tech-Doc/jvm/jconsole_home.png" width="900px"></p>
+<ul>
+<li>定义的各种字段内容</li>
+<li>继承父类的信息</li>
+</ul>
+
+<p><strong><span style="color:red">对齐填充</span></strong>仅仅起着占位符的作用，因为VM的内存管理要求对象的其实地址必须是8字节的整数倍(也就是说对象是8字节的整数倍)。</p>
+
+<h2 id="对象的生命周期">对象的生命周期</h2>
+
+<h3 id="对象的创建">对象的创建</h3>
+
+<h3 id="对象的调用">对象的调用</h3>
+
+<h3 id="对象的回收">对象的回收</h3>
 </article>
 
       
@@ -174,11 +183,16 @@ https://github.com/alex-shpak/hugo-book
   <aside class="book-toc level-3 fixed">
     <nav id="TableOfContents">
 <ul>
-<li><a href="#使用jconsole查看jvm进程">使用JConsole查看JVM进程</a>
+<li><a href="#对象及其声明周期">对象及其声明周期</a>
 <ul>
-<li><a href="#1-连接">1.连接</a></li>
+<li><a href="#对象的数据结构">对象的数据结构</a></li>
+<li><a href="#对象的生命周期">对象的生命周期</a>
+<ul>
+<li><a href="#对象的创建">对象的创建</a></li>
+<li><a href="#对象的调用">对象的调用</a></li>
+<li><a href="#对象的回收">对象的回收</a></li>
 </ul></li>
-<li><a href="#2-查看">2.查看</a></li>
+</ul></li>
 </ul>
 </nav>
   </aside>

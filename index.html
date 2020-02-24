@@ -7,7 +7,7 @@
 <html lang="en">
 
 <head>
-	<meta name="generator" content="Hugo 0.54.0" />
+	<meta name="generator" content="Hugo 0.55.5" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>
@@ -57,27 +57,49 @@ https://github.com/alex-shpak/hugo-book
   </style>
 
 <ul>
-<li><strong><em>JMM(Java内存模型)</em></strong>
+<li><strong><em>Java内存模型</em></strong>
 
 <ul>
 <li><a href="/docs/jvm/docs/jmm/jmm/">JMM模型</a></li>
 <li><a href="/docs/jvm/docs/jmm/hb/">Happens-before</a></li>
 </ul></li>
-
-<li><p><strong><em>GC(垃圾回收)</em></strong></p></li>
-
-<li><p><strong><em>ClassLoad(类加载)</em></strong></p></li>
-
-<li><p><strong><em>Tools(JVM工具)</em></strong></p>
+<li><strong><em>垃圾回收</em></strong>
 
 <ul>
-<li><a href="#">jps</a></li>
-<li><a href="#">jstack</a></li>
-<li><a href="#">jmap</a></li>
-<li><a href="#">jhat</a></li>
-<li><a href="#">jstat</a></li>
-<li><a href="#">jmap</a></li>
-<li><a href="/docs/jvm/docs/tools/jconsole/">JConsole查看JVM进程信息</a></li>
+<li><a href="/docs/jvm/docs/gc/dead/">判断对象是否死亡</a></li>
+<li><a href="/docs/jvm/docs/gc/algo_collect/">垃圾回收算法</a></li>
+<li><a href="/docs/jvm/docs/gc/jvm_gc/">JVM垃圾收集器</a></li>
+</ul></li>
+<li><strong><em>类的那些事</em></strong>
+
+<ul>
+<li><a href="/docs/jvm/docs/class/f_class/">类文件</a></li>
+<li><a href="/docs/jvm/docs/class/classload/">类加载</a></li>
+<li><a href="/docs/jvm/docs/class/f_object/">对象及其生命周期</a></li>
+</ul></li>
+<li><strong><em>常用JVM参数</em></strong>
+
+<ul>
+<li><a href="#">内存参数</a></li>
+<li><a href="#">GC参数</a></li>
+</ul></li>
+<li><strong><em>JVM工具</em></strong>
+
+<ul>
+<li><a href="#">jps:查看进程状况</a></li>
+<li><a href="#">jstack:进程堆栈信息</a></li>
+<li><a href="#">jmap:内存映射工具</a></li>
+<li><a href="#">jhat:</a></li>
+<li><a href="#">jstat:虚拟机统计信息监视工具</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">JConsole:实时监视</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">jProfile:实时监视</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">MAT:实时监视</a></li>
+</ul></li>
+<li><strong><em>JVM故障&amp;调优</em></strong>
+
+<ul>
+<li><a href="#">OOM错误</a>
+<br /></li>
 </ul></li>
 </ul>
 
@@ -107,6 +129,32 @@ https://github.com/alex-shpak/hugo-book
 <article class="markdown">
 
 <h1 id="java虚拟机">Java虚拟机</h1>
+
+<hr />
+
+<blockquote>
+<p><em>学习计算机操作系统只是可以更好理解VM的知识</em></p>
+
+<p>🔗<strong><a href="https://jaswine.com/docs/linux/">操作系统 - Jaswine Doc</a></strong></p>
+</blockquote>
+
+<hr />
+
+<p><code>Java VM</code>是寄宿在操作系统之上的一个虚拟机，拥有自己的指令和内存管理。这里是<code>wikipedia</code>中🔗<strong><a href="https://zh.wikipedia.org/wiki/Java%E8%99%9A%E6%8B%9F%E6%9C%BA">Java虚拟机</a></strong>的词条。</p>
+
+<p>我们写好代码后编译成<code>class</code>文件就可以在虚拟机上运行起来了，这里的代码不只是<code>Java</code>代码，可以是别的的代码，这是<code>Java</code>一开始创建时的愿景，<code>JVM</code>和<code>Java</code>不强制绑定，并在🔗<strong><a href="#">JSR</a></strong>中实现。所以有很多<code>Java</code>语言编写的代码经过编译成<code>class</code>文件后可以在<code>JVM</code>上运行。</p>
+
+<p><code>JVM</code>实现了自己的内存管理实现是按照🔗<strong><a href="https://download.oracle.com/otn-pub/jcp/memory_model-1.0-pfd-spec-oth-JSpec/memory_model-1_0-pfd-spec.pdf?AuthParam=1582524022_c5aa043b6e713491b97d4cbe849ef3b5">JSR-133:Java Memory Model</a></strong>实现的。关于<code>Java</code>内存模型更多的详细内容请查看<strong><span style="color:#CD5555">Java内存模型</span></strong></p>
+
+<p><code>Java</code>&ldquo;一次编写，到处运行&rdquo;的特性是由<code>JVM</code>提供。如果没有<code>JVM</code>这样的东西，对于每一套操作系统我们写的代码都是由区别，因为每一个操作系统底层的指令是有区别的。但是<code>JVM</code>帮我们屏蔽了不同操作系统而带来运行时候的差异。实现这样的特性要依赖中间桥梁一样的产物&ndash;<code>class</code>文件，🔗<strong><a href="https://download.oracle.com/otndocs/jcp/jcfsu-1.0-fr-eval-oth-JSpec/">JSR202-Java Class File Specification</a></strong>中规范了<code>class</code>文件的文件格式。只要符合这个格式的class文件都可以在<code>JVM</code>上运行。关于<code>class</code>类信息看🔗<strong><a href="/docs/jvm/docs/class/f_class/">类的那些事#类文件</a></strong>。</p>
+
+<p><code>Java</code>是面向对象的语言，所有的功能都是由对象去完成，对象是类的一个实例，类变成对象需要完成一系列的操作，最先的操作就是加载类，关于加载的类的信息看🔗<strong><a href="/docs/jvm/docs/class/classload/">类的那些事#类加载</a></strong>。</p>
+
+<p>类通过一系列的操作生成了类的实例&ndash;对象，对象从出生到最后的消亡整个生命周期串联了虚拟机的方方面面，从加载类到实例化成对象，分配对象到内存上，到对象调用，到最后对象死亡被GC回收。看🔗<strong><a href="/docs/jvm/docs/class/f_object/">类的那些事#对象及其生命周期</a></strong>。</p>
+
+<p><code>JVM</code>作为工程品，给使用人员提供了非常大的操作限度，在启动<code>JVM</code>的时候可以加上相关的参数来调整来适应具体的APP<strong><span style="color:#CD5555">常用JVM参数</span></strong>。</p>
+
+<p>在出现错误或者程序运行没有达到预期的时候可以通过一系列的工具来找到程序的瓶颈在什么地方。详细看<strong><span style="color:#CD5555">JVM工具</span></strong>。</p>
 </article>
 
       

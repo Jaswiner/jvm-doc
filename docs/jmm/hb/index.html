@@ -56,27 +56,49 @@ https://github.com/alex-shpak/hugo-book
   </style>
 
 <ul>
-<li><strong><em>JMM(Java内存模型)</em></strong>
+<li><strong><em>Java内存模型</em></strong>
 
 <ul>
 <li><a href="/docs/jvm/docs/jmm/jmm/">JMM模型</a></li>
 <li><a href="/docs/jvm/docs/jmm/hb/">Happens-before</a></li>
 </ul></li>
-
-<li><p><strong><em>GC(垃圾回收)</em></strong></p></li>
-
-<li><p><strong><em>ClassLoad(类加载)</em></strong></p></li>
-
-<li><p><strong><em>Tools(JVM工具)</em></strong></p>
+<li><strong><em>垃圾回收</em></strong>
 
 <ul>
-<li><a href="#">jps</a></li>
-<li><a href="#">jstack</a></li>
-<li><a href="#">jmap</a></li>
-<li><a href="#">jhat</a></li>
-<li><a href="#">jstat</a></li>
-<li><a href="#">jmap</a></li>
-<li><a href="/docs/jvm/docs/tools/jconsole/">JConsole查看JVM进程信息</a></li>
+<li><a href="/docs/jvm/docs/gc/dead/">判断对象是否死亡</a></li>
+<li><a href="/docs/jvm/docs/gc/algo_collect/">垃圾回收算法</a></li>
+<li><a href="/docs/jvm/docs/gc/jvm_gc/">JVM垃圾收集器</a></li>
+</ul></li>
+<li><strong><em>类的那些事</em></strong>
+
+<ul>
+<li><a href="/docs/jvm/docs/class/f_class/">类文件</a></li>
+<li><a href="/docs/jvm/docs/class/classload/">类加载</a></li>
+<li><a href="/docs/jvm/docs/class/f_object/">对象及其生命周期</a></li>
+</ul></li>
+<li><strong><em>常用JVM参数</em></strong>
+
+<ul>
+<li><a href="#">内存参数</a></li>
+<li><a href="#">GC参数</a></li>
+</ul></li>
+<li><strong><em>JVM工具</em></strong>
+
+<ul>
+<li><a href="#">jps:查看进程状况</a></li>
+<li><a href="#">jstack:进程堆栈信息</a></li>
+<li><a href="#">jmap:内存映射工具</a></li>
+<li><a href="#">jhat:</a></li>
+<li><a href="#">jstat:虚拟机统计信息监视工具</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">JConsole:实时监视</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">jProfile:实时监视</a></li>
+<li><a href="/docs/jvm/docs/tools/jconsole/">MAT:实时监视</a></li>
+</ul></li>
+<li><strong><em>JVM故障&amp;调优</em></strong>
+
+<ul>
+<li><a href="#">OOM错误</a>
+<br /></li>
 </ul></li>
 </ul>
 
@@ -108,6 +130,10 @@ https://github.com/alex-shpak/hugo-book
 
 <h1 id="happen-before模型">Happen-before模型</h1>
 
+<blockquote>
+<p>🔗<strong><a href="https://jaswine.com/source/java/docs/concurrent/base/#%E5%B9%B6%E5%8F%91%E5%B8%A6%E6%9D%A5%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98">为什么多线程并发不安全 &ndash; Jaswine</a></strong></p>
+</blockquote>
+
 <p><code>Java</code>引入线程来利用现代多处理器的计算能力，但是同时也带来了线程安全的问题，Java内存模型(JMM)解决了线程之间操作可见性的问题。</p>
 
 <h2 id="happen-before原则">happen-before原则</h2>
@@ -122,6 +148,25 @@ https://github.com/alex-shpak/hugo-book
 <li>线程终结的happen-before原则：线程中的所有操作都happen-before线程的终止检测。</li>
 <li>对象创建的happen-before原则：一个对象的初始化完成先于他的finalize方法调用。</li>
 </ul>
+
+<h2 id="实现原理">实现原理</h2>
+
+<h3 id="单线程-happen-before-原则"><strong>单线程<code>happen-before</code>原则</strong></h3>
+
+<p><code>Java</code>代码在编译的时候会发生重排序的操作，在<code>CPU</code>执行代码的时候也会发生重排序的情况。</p>
+
+<pre><code class="language-java">int a = 10;         //1
+int b = 1;          //2
+int c = a + b;      //3 
+</code></pre>
+
+<p>如上代码如果3发生在2之前就会有问题，因为b还没有声明。但是2发生在1之前就没有问题。<code>happen-before</code>归为两种情况</p>
+
+<blockquote>
+<p><p style="color:red">1.会改变程序结果的重排序，Java内存模型要求编译器和处理器禁止这种重排序。</p>
+
+<p><p style="color:red">2.不会改成程序结果的重排序，Java内存模型不强制要求。</p>
+</blockquote>
 </article>
 
       
@@ -138,6 +183,10 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="#happen-before模型">Happen-before模型</a>
 <ul>
 <li><a href="#happen-before原则">happen-before原则</a></li>
+<li><a href="#实现原理">实现原理</a>
+<ul>
+<li><a href="#单线程-happen-before-原则"><strong>单线程<code>happen-before</code>原则</strong></a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
